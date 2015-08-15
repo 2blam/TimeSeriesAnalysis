@@ -130,6 +130,6 @@ for i = 1:size(filenames,1),
   #save the RTT data as mat file
   data.RTT = RTT;
   data.t = t;
-  save([strtrim(filenames(i, 2:end)) ".mat"], "data"); 
+  save(["./RouteDataPreprocessed/"  strtrim(filenames(i, 2:end)) ".mat"], "data", "-v7"); 
 end;
 
