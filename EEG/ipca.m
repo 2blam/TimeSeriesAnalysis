@@ -8,6 +8,7 @@ eventTypeVal = [2, 4];
 dirlist = dir(dataDir);
 %for each tester
 for n = 1:size(dirlist, 1)
+
     %if it is not . or ..
    if strcmp(dirlist(n).name, '.') == 0 & strcmp(dirlist(n).name, '..') == 0
        dirName = dirlist(n).name;
@@ -158,7 +159,21 @@ for n = 1:size(dirlist, 1)
             % form cluster - consider W(:, 1:2) only
             %  ** can consider more components e.g. (W:, 1:3)
             Z = linkage(squareform(pdist(W(:, 1:2))));
-            T = cluster(Z, 'maxclust', 5); % consider 5 clusters
+            [H, T] = dendrogram(Z, 'Orientation', 'Right');
+            % get the handle of the axis
+            hAxis = get(H(1),'parent');
+            % Get the permutation of the nodes
+            perm=str2num(get(hAxis,'YtickLabel'));
+            % label data
+            labelData = cellstr(data.channel_labels)';
+            % Create the YTickLabels
+            set(hAxis,'YTickLabel',labelData(perm))
+            title(strrep([dirName ' event: ' event], '_', ' '));
+            saveas(gcf, [outputDir '\' dirName '_e' event '_dendrogram.png']);
+            close
+            
+            %T = cluster(Z, 'maxclust', 5); % consider 5 clusters
+            T = cluster(Z, 'maxclust', 3); % consider 3 clusters
             %  can be increased or decreased
 
             % preprocess - updat the label with related cluster
